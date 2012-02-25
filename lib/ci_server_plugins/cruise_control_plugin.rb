@@ -15,12 +15,12 @@ module Blinky
       doc = Nokogiri::XML::Document.parse(open(@cc_url))
       build_info = parse(doc)
 
-      if build_info[:last_build_status] == "Success"
+      if build_info[:activity] == "Building"
+        building!
+      elsif build_info[:last_build_status] == "Success"
         success!
       elsif build_info[:last_build_status] == "Failure"
         failure!
-      elsif build_info[:last_build_status] == "Building"
-        building!
       end
     end
 

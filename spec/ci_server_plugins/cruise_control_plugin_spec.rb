@@ -73,8 +73,8 @@ module Blinky
       end
 
       it "will indicate when the current build is in progress" do
-        project_element.stub(:attr).with("activity").and_return("Sleeping")
-        project_element.stub(:attr).with("lastBuildStatus").and_return("Building")
+        project_element.stub(:attr).with("activity").and_return("Building")
+        project_element.stub(:attr).with("lastBuildStatus").and_return("Success")
 
         plugin.should_receive(:building!)
         plugin.watch_server
