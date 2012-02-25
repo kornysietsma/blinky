@@ -7,12 +7,16 @@ module Blinky
     let(:cc_project) { "foo" }
     let(:cc_url) { "http://jenkins.org/cc.xml" }
     let(:cc_xml) { "<Projects><Project name='foo' activity='Sleeping' lastBuildStatus='Success'></Project></Projects>" }
+    let(:doc) { mock(Nokogiri::XML::Document).as_null_object }
+    let(:project_element) { mock(Nokogiri::XML::Element).as_null_object }
 
     before :each do
       ENV.stub(:[]).with("BLINKY_CC_URL").and_return(cc_url)
       ENV.stub(:[]).with("BLINKY_CC_PROJECT").and_return(cc_project)
 
       plugin.stub(:open).and_return(cc_xml)
+      Nokogiri::XML::Document.stub(:parse).and_return(doc)
+      doc.stub(:xpath).and_return(project_element)
     end
 
     it "will take URL to cc.xml from environment" do
@@ -25,14 +29,6 @@ module Blinky
     end
 
     describe "parsing cc.xml" do
-      let(:doc) { mock(Nokogiri::XML::Document).as_null_object }
-      let(:project_element) { mock(Nokogiri::XML::Element).as_null_object }
-
-      before :each do
-        Nokogiri::XML::Document.stub(:parse).and_return(doc)
-        doc.stub(:xpath).and_return(project_element)
-      end
-
       it "will take the project name from environment" do
         ENV.stub(:[]).with("BLINKY_CC_PROJECT").and_return("foo")
         CruiseControlPlugin.new.project_name.should == "foo"
@@ -55,6 +51,16 @@ module Blinky
 
       it "will get the last build status for the project" do
         project_element.should_receive(:attr).with("lastBuildStatus")
+        plugin.watch_server
+      end
+    end
+
+    describe "controlling light" do
+      it "will turn light green when last build is successful" do
+        project_element.stub(:attr).with("activity").and_return("Sleeping")
+        project_element.stub(:attr).with("lastBuildStatus").and_return("Success")
+
+        plugin.should_receive(:success!)
         plugin.watch_server
       end
     end
