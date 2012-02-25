@@ -44,6 +44,11 @@ module Blinky
         project_element.should_receive(:attr).with("activity")
         cc_plugin.watch_server
       end
+
+      it "will get the last build status for the project" do
+        project_element.should_receive(:attr).with("lastBuildStatus")
+        cc_plugin.watch_server
+      end
     end
   end
 end

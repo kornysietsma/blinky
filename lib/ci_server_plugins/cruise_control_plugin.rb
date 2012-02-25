@@ -14,6 +14,7 @@ module Blinky
       doc = Nokogiri::XML::Document.parse(open(@cc_xml_url))
       project_element = doc.xpath("//Projects/Project")
       activity = project_element.attr("activity")
+      last_build_status = project_element.attr("lastBuildStatus")
     end
   end
 end
