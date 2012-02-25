@@ -11,7 +11,7 @@ module Blinky
     before :each do
       ENV.stub(:[]).with("BLINKY_CC_URL").and_return(cc_url)
       ENV.stub(:[]).with("BLINKY_CC_PROJECT").and_return(cc_project)
-      
+
       plugin.stub(:open).and_return(cc_xml)
     end
 
@@ -30,7 +30,7 @@ module Blinky
 
       before :each do
         Nokogiri::XML::Document.stub(:parse).and_return(doc)
-        doc.stub(:xpath).with("//Projects/Project").and_return(project_element)
+        doc.stub(:xpath).and_return(project_element)
       end
 
       it "will take the project name from environment" do
@@ -44,7 +44,7 @@ module Blinky
       end
 
       it "will look for the project element in the cc.xml response" do
-        doc.should_receive(:xpath).with("//Projects/Project").and_return(project_element)
+        doc.should_receive(:xpath).with("//Projects/Project[@name='#{cc_project}']").and_return(project_element)
         plugin.watch_server
       end
 

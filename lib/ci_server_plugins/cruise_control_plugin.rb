@@ -13,7 +13,7 @@ module Blinky
 
     def watch_server
       doc = Nokogiri::XML::Document.parse(open(@cc_url))
-      project_element = doc.xpath("//Projects/Project")
+      project_element = doc.xpath("//Projects/Project[@name='#{@project_name}']")
       activity = project_element.attr("activity")
       last_build_status = project_element.attr("lastBuildStatus")
     end
