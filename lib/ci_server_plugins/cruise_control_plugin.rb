@@ -25,7 +25,7 @@ module Blinky
           warning!
         end
       elsif build_info[:activity] == "Building"
-        if build_info[:activity] == "Building"
+        if build_info[:last_build_status] == "Success"
           building!
         end
       end
