@@ -1,14 +1,8 @@
-require 'rubygems'
-require 'rake'
-
-desc "Check if blinky is working with your USB device"
-task :check_device do
-  require 'manual_tests/device_checker'
-  DeviceChecker.new.check
-end
+require "rubygems"
+require "rake"
 
 begin
-  require 'jeweler'
+  require "jeweler"
   Jeweler::Tasks.new do |gem|
     gem.name = "blinky"
     gem.summary = %Q{helps you see the light}
@@ -27,15 +21,21 @@ end
 
 require "rspec/core/rake_task"
 RSpec::Core::RakeTask.new(:spec) do |t|
-    t.rspec_opts = ["--color", "--format d"]
+  t.rspec_opts = ["--color", "--format d"]
 end
 
-require 'rdoc/task'
+require "rdoc/task"
 Rake::RDocTask.new do |rdoc|
-  version = File.exist?('VERSION') ? File.read('VERSION') : ""
+  version = File.exist?("VERSION") ? File.read("VERSION") : ""
 
-  rdoc.rdoc_dir = 'rdoc'
+  rdoc.rdoc_dir = "rdoc"
   rdoc.title = "blinky #{version}"
-  rdoc.rdoc_files.include('README*')
-  rdoc.rdoc_files.include('lib/**/*.rb')
+  rdoc.rdoc_files.include("README*")
+  rdoc.rdoc_files.include("lib/**/*.rb")
+end
+
+desc "Check if blinky is working with your USB device"
+task :check_device do
+  require "manual_tests/device_checker"
+  DeviceChecker.new.check
 end
