@@ -12,23 +12,33 @@ module Blinky
     end
 
     def watch_server
-      build_info = poll_cc
+      doc = Nokogiri::XML::Document.parse(open(@cc_url))
+      build_info = parse(doc)
 
       if build_info[:last_build_status] == "Success"
         success!
+      elsif build_info[:last_build_status] == "Failure"
+        failure!
       end
     end
 
     private
 
-    def poll_cc
-      doc = Nokogiri::XML::Document.parse(open(@cc_url))
-      project_element = doc.xpath("//Projects/Project[@name='#{@project_name}']")
+    def parse(doc)
+      project_element = parse_project_element(doc)
+      return {:activity => parse_activity(project_element), :last_build_status => parse_last_build_status(project_element)}
+    end
 
-      activity = project_element.attr("activity")
-      last_build_status = project_element.attr("lastBuildStatus")
+    def parse_project_element(doc)
+      return doc.xpath("//Projects/Project[@name='#{@project_name}']")
+    end
 
-      return {:activity => activity, :last_build_status => last_build_status}
+    def parse_activity(project_element)
+      return project_element.attr("activity")
+    end
+
+    def parse_last_build_status(project_element)
+      return project_element.attr("lastBuildStatus")
     end
   end
 end
