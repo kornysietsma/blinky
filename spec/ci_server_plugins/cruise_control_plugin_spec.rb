@@ -19,21 +19,27 @@ module Blinky
       cc_plugin.watch_server
     end
 
-    it "will create an XML document with the response from the HTTP call" do
-      cc_xml = "<Projects><Project></Project></Projects>"
-      cc_plugin.stub(:open).and_return(cc_xml)
-      doc = mock(Nokogiri::XML::Document).as_null_object
-      Nokogiri::XML::Document.should_receive(:parse).with(cc_xml).and_return(doc)
-      cc_plugin.watch_server
-    end
+    describe "parsing cc.xml" do
+      let(:cc_xml) { "<Projects><Project activity='Sleeping' lastBuildStatus='Success'></Project></Projects>" }
 
-    it "will look for the project element in the cc.xml response" do
-      cc_xml = "<Projects><Project activity='Sleeping' lastBuildStatus='Success'></Project></Projects>"
-      cc_plugin.stub(:open).and_return(cc_xml)
-      doc = mock(Nokogiri::XML::Document)
-      doc.should_receive(:xpath).with("//Projects/Project")
-      Nokogiri::XML::Document.stub(:parse).and_return(doc)
-      cc_plugin.watch_server
+      before :each do
+        cc_plugin.stub(:open).and_return(cc_xml)
+      end
+
+      it "will create an XML document with the response from the HTTP call" do
+        doc = mock(Nokogiri::XML::Document).as_null_object
+        Nokogiri::XML::Document.should_receive(:parse).with(cc_xml).and_return(doc)
+        
+        cc_plugin.watch_server
+      end
+
+      it "will look for the project element in the cc.xml response" do
+        doc = mock(Nokogiri::XML::Document)
+        doc.should_receive(:xpath).with("//Projects/Project")
+        Nokogiri::XML::Document.stub(:parse).and_return(doc)
+
+        cc_plugin.watch_server
+      end
     end
   end
 end
