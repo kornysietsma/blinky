@@ -11,7 +11,8 @@ module Blinky
     end
 
     def watch_server
-      open(@cc_xml_url)
+      cc_xml = Nokogiri::XML.parse(open(@cc_xml_url))
+
     end
   end
 end
