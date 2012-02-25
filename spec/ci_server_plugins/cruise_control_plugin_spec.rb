@@ -56,7 +56,7 @@ module Blinky
     end
 
     describe "controlling light" do
-      it "will turn light green when last build is successful" do
+      it "will indicate when last build is successful" do
         project_element.stub(:attr).with("activity").and_return("Sleeping")
         project_element.stub(:attr).with("lastBuildStatus").and_return("Success")
 
@@ -64,11 +64,19 @@ module Blinky
         plugin.watch_server
       end
 
-      it "will turn light red when last build failed" do
+      it "will indicate when last build failed" do
         project_element.stub(:attr).with("activity").and_return("Sleeping")
         project_element.stub(:attr).with("lastBuildStatus").and_return("Failure")
 
         plugin.should_receive(:failure!)
+        plugin.watch_server
+      end
+
+      it "will indicate when the current build is in progress" do
+        project_element.stub(:attr).with("activity").and_return("Sleeping")
+        project_element.stub(:attr).with("lastBuildStatus").and_return("Building")
+
+        plugin.should_receive(:building!)
         plugin.watch_server
       end
     end

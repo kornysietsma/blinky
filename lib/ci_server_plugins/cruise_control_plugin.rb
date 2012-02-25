@@ -19,6 +19,8 @@ module Blinky
         success!
       elsif build_info[:last_build_status] == "Failure"
         failure!
+      elsif build_info[:last_build_status] == "Building"
+        building!
       end
     end
 
