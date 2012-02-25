@@ -55,29 +55,45 @@ module Blinky
       end
     end
 
-    describe "controlling light" do
-      it "will indicate when last build is successful" do
-        project_element.stub(:attr).with("activity").and_return("Sleeping")
-        project_element.stub(:attr).with("lastBuildStatus").and_return("Success")
+    describe "controlling the light" do
+      describe "when current activity is Sleeping" do
+        before :each do
+          project_element.stub(:attr).with("activity").and_return("Sleeping")
+        end
 
-        plugin.should_receive(:success!)
-        plugin.watch_server
+        it "will indicate when last build is successful" do
+          project_element.stub(:attr).with("lastBuildStatus").and_return("Success")
+          plugin.should_receive(:success!)
+
+          plugin.watch_server
+        end
+
+        it "will indicate when last build failed" do
+          project_element.stub(:attr).with("lastBuildStatus").and_return("Failure")
+          plugin.should_receive(:failure!)
+
+          plugin.watch_server
+        end
+
+        it "will indicate when there was an exception with the last build" do
+          project_element.stub(:attr).with("lastBuildStatus").and_return("Exception")
+          plugin.should_receive(:warning!)
+
+          plugin.watch_server
+        end
       end
 
-      it "will indicate when last build failed" do
-        project_element.stub(:attr).with("activity").and_return("Sleeping")
-        project_element.stub(:attr).with("lastBuildStatus").and_return("Failure")
+      describe "when current activity is Building" do
+        before :each do
+          project_element.stub(:attr).with("activity").and_return("Building")
+        end
 
-        plugin.should_receive(:failure!)
-        plugin.watch_server
-      end
+        it "will indicate a build is in progress when the last build was successful" do
+          project_element.stub(:attr).with("lastBuildStatus").and_return("Success")
+          plugin.should_receive(:building!)
 
-      it "will indicate when the current build is in progress" do
-        project_element.stub(:attr).with("activity").and_return("Building")
-        project_element.stub(:attr).with("lastBuildStatus").and_return("Success")
-
-        plugin.should_receive(:building!)
-        plugin.watch_server
+          plugin.watch_server
+        end
       end
     end
   end
