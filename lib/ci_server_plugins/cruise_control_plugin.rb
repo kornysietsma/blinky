@@ -28,6 +28,9 @@ module Blinky
         if build_info[:last_build_status] == "Success"
           building!
         end
+        if build_info[:last_build_status] == "Failure"
+          failure!
+        end
       end
     end
 

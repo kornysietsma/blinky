@@ -94,6 +94,13 @@ module Blinky
 
           plugin.watch_server
         end
+
+        it "will indicate that the last build failed" do
+          project_element.stub(:attr).with("lastBuildStatus").and_return("Failure")
+          plugin.should_receive(:failure!)
+
+          plugin.watch_server
+        end
       end
     end
   end
