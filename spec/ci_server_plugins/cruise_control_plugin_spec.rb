@@ -101,6 +101,13 @@ module Blinky
 
           plugin.watch_server
         end
+
+        it "will indicate that there was an exception with the last build" do
+          project_element.stub(:attr).with("lastBuildStatus").and_return("Exception")
+          plugin.should_receive(:warning!)
+
+          plugin.watch_server
+        end
       end
     end
   end

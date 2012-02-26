@@ -27,10 +27,12 @@ module Blinky
       elsif build_info[:activity] == "Building"
         if build_info[:last_build_status] == "Success"
           building!
-        end
-        if build_info[:last_build_status] == "Failure"
+        elsif build_info[:last_build_status] == "Failure"
           failure!
+        elsif build_info[:last_build_status] == "Exception"
+          warning!
         end
+
       end
     end
 
