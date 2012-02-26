@@ -58,30 +58,32 @@ module Blinky
     end
 
     describe "controlling the light" do
-      describe "when current activity is Sleeping" do
-        before :each do
-          project_element.stub(:attr).with("activity").and_return("Sleeping")
-        end
+      ["Sleeping", "CheckingModifications"].each do |status|
+        describe "when current activity is #{status}" do
+          before :each do
+            project_element.stub(:attr).with("activity").and_return(status)
+          end
 
-        it "will indicate that the last build is successful" do
-          project_element.stub(:attr).with("lastBuildStatus").and_return("Success")
-          plugin.should_receive(:success!)
+          it "will indicate that the last build was successful" do
+            project_element.stub(:attr).with("lastBuildStatus").and_return("Success")
+            plugin.should_receive(:success!)
 
-          plugin.watch_server
-        end
+            plugin.watch_server
+          end
 
-        it "will indicate that the last build failed" do
-          project_element.stub(:attr).with("lastBuildStatus").and_return("Failure")
-          plugin.should_receive(:failure!)
+          it "will indicate that the last build failed" do
+            project_element.stub(:attr).with("lastBuildStatus").and_return("Failure")
+            plugin.should_receive(:failure!)
 
-          plugin.watch_server
-        end
+            plugin.watch_server
+          end
 
-        it "will indicate that there was an exception with the last build" do
-          project_element.stub(:attr).with("lastBuildStatus").and_return("Exception")
-          plugin.should_receive(:warning!)
+          it "will indicate that there was an exception with the last build" do
+            project_element.stub(:attr).with("lastBuildStatus").and_return("Exception")
+            plugin.should_receive(:warning!)
 
-          plugin.watch_server
+            plugin.watch_server
+          end
         end
       end
 
@@ -93,33 +95,6 @@ module Blinky
         it "will indicate that a build is in progress when the last build was successful" do
           project_element.stub(:attr).with("lastBuildStatus").and_return("Success")
           plugin.should_receive(:building!)
-
-          plugin.watch_server
-        end
-
-        it "will indicate that the last build failed" do
-          project_element.stub(:attr).with("lastBuildStatus").and_return("Failure")
-          plugin.should_receive(:failure!)
-
-          plugin.watch_server
-        end
-
-        it "will indicate that there was an exception with the last build" do
-          project_element.stub(:attr).with("lastBuildStatus").and_return("Exception")
-          plugin.should_receive(:warning!)
-
-          plugin.watch_server
-        end
-      end
-
-      describe "when current activity is CheckingModifications" do
-        before :each do
-          project_element.stub(:attr).with("activity").and_return("CheckingModifications")
-        end
-
-        it "will indicate that the last build was successful" do
-          project_element.stub(:attr).with("lastBuildStatus").and_return("Success")
-          plugin.should_receive(:success!)
 
           plugin.watch_server
         end
