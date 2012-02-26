@@ -32,7 +32,14 @@ module Blinky
         elsif build_info[:last_build_status] == "Exception"
           warning!
         end
-
+      elsif build_info[:activity] == "CheckingModifications"
+        if build_info[:last_build_status] == "Success"
+          success!
+        elsif build_info[:last_build_status] == "Failure"
+          failure!
+        elsif build_info[:last_build_status] == "Exception"
+          warning!
+        end
       end
     end
 

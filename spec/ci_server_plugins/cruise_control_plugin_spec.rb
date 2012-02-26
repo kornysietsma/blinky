@@ -109,6 +109,33 @@ module Blinky
           plugin.watch_server
         end
       end
+
+      describe "when current activity is CheckingModifications" do
+        before :each do
+          project_element.stub(:attr).with("activity").and_return("CheckingModifications")
+        end
+
+        it "will indicate when last build is successful" do
+          project_element.stub(:attr).with("lastBuildStatus").and_return("Success")
+          plugin.should_receive(:success!)
+
+          plugin.watch_server
+        end
+
+        it "will indicate when last build failed" do
+          project_element.stub(:attr).with("lastBuildStatus").and_return("Failure")
+          plugin.should_receive(:failure!)
+
+          plugin.watch_server
+        end
+
+        it "will indicate when there was an exception with the last build" do
+          project_element.stub(:attr).with("lastBuildStatus").and_return("Exception")
+          plugin.should_receive(:warning!)
+
+          plugin.watch_server
+        end
+      end
     end
   end
 end
