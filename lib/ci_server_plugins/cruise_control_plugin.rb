@@ -14,18 +14,7 @@ module Blinky
     def watch_server
       doc = Nokogiri::XML::Document.parse(open(@cc_url))
       build_info = parse(doc)
-
-      if build_info[:last_build_status] == "Success"
-        if build_info[:activity] == "Building"
-          building!
-        else
-          success!
-        end
-      elsif build_info[:last_build_status] == "Failure"
-        failure!
-      elsif build_info[:last_build_status] == "Exception"
-        warning!
-      end
+      switch_light(build_info)
     end
 
     private
@@ -45,6 +34,20 @@ module Blinky
 
     def parse_last_build_status(project_element)
       return project_element.attr("lastBuildStatus")
+    end
+
+    def switch_light(build_info)
+      if build_info[:last_build_status] == "Success"
+        if build_info[:activity] == "Building"
+          building!
+        else
+          success!
+        end
+      elsif build_info[:last_build_status] == "Failure"
+        failure!
+      elsif build_info[:last_build_status] == "Exception"
+        warning!
+      end
     end
   end
 end
