@@ -16,7 +16,7 @@ module Blinky
       build_info = parse(doc)
 
 
-      if build_info[:activity] == "Sleeping"
+      if build_info[:activity] == "Sleeping" || build_info[:activity] == "CheckingModifications"
         if build_info[:last_build_status] == "Success"
           success!
         elsif build_info[:last_build_status] == "Failure"
@@ -27,14 +27,6 @@ module Blinky
       elsif build_info[:activity] == "Building"
         if build_info[:last_build_status] == "Success"
           building!
-        elsif build_info[:last_build_status] == "Failure"
-          failure!
-        elsif build_info[:last_build_status] == "Exception"
-          warning!
-        end
-      elsif build_info[:activity] == "CheckingModifications"
-        if build_info[:last_build_status] == "Success"
-          success!
         elsif build_info[:last_build_status] == "Failure"
           failure!
         elsif build_info[:last_build_status] == "Exception"
