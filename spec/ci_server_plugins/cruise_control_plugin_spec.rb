@@ -4,9 +4,11 @@ require "ci_server_plugins/cruise_control_plugin"
 module Blinky
   describe "CruiseControlPlugin" do
     let(:plugin) { CruiseControlPlugin.new }
+
     let(:cc_project) { "foo" }
     let(:cc_url) { "http://jenkins.org/cc.xml" }
     let(:cc_xml) { "<Projects><Project name='foo' activity='Sleeping' lastBuildStatus='Success'></Project></Projects>" }
+
     let(:doc) { mock(Nokogiri::XML::Document).as_null_object }
     let(:project_element) { mock(Nokogiri::XML::Element).as_null_object }
 
@@ -61,21 +63,21 @@ module Blinky
           project_element.stub(:attr).with("activity").and_return("Sleeping")
         end
 
-        it "will indicate when last build is successful" do
+        it "will indicate that the last build is successful" do
           project_element.stub(:attr).with("lastBuildStatus").and_return("Success")
           plugin.should_receive(:success!)
 
           plugin.watch_server
         end
 
-        it "will indicate when last build failed" do
+        it "will indicate that the last build failed" do
           project_element.stub(:attr).with("lastBuildStatus").and_return("Failure")
           plugin.should_receive(:failure!)
 
           plugin.watch_server
         end
 
-        it "will indicate when there was an exception with the last build" do
+        it "will indicate that there was an exception with the last build" do
           project_element.stub(:attr).with("lastBuildStatus").and_return("Exception")
           plugin.should_receive(:warning!)
 
@@ -88,7 +90,7 @@ module Blinky
           project_element.stub(:attr).with("activity").and_return("Building")
         end
 
-        it "will indicate a build is in progress when the last build was successful" do
+        it "will indicate that a build is in progress when the last build was successful" do
           project_element.stub(:attr).with("lastBuildStatus").and_return("Success")
           plugin.should_receive(:building!)
 
@@ -115,21 +117,21 @@ module Blinky
           project_element.stub(:attr).with("activity").and_return("CheckingModifications")
         end
 
-        it "will indicate when last build is successful" do
+        it "will indicate that the last build was successful" do
           project_element.stub(:attr).with("lastBuildStatus").and_return("Success")
           plugin.should_receive(:success!)
 
           plugin.watch_server
         end
 
-        it "will indicate when last build failed" do
+        it "will indicate that the last build failed" do
           project_element.stub(:attr).with("lastBuildStatus").and_return("Failure")
           plugin.should_receive(:failure!)
 
           plugin.watch_server
         end
 
-        it "will indicate when there was an exception with the last build" do
+        it "will indicate that there was an exception with the last build" do
           project_element.stub(:attr).with("lastBuildStatus").and_return("Exception")
           plugin.should_receive(:warning!)
 
