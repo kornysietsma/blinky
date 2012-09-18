@@ -1,6 +1,6 @@
 source "http://rubygems.org"
 
-gem "ruby-usb", ">= 0.2.1"
+gem "libusb", "~> 0.2.0"
 gem "jeweler"
 gem "nokogiri"
 

@@ -51,9 +51,9 @@ Not sure which light is which?
 === Operating Systems
 * OSX
 * Linux
-* Windows (Theoretically)
+* Windows (Probably)
     
-NOTE: I haven't been able to test fully on Windows yet. Any assistance with doing so, and/or providing more complete installation instructions would be gratefully received.
+NOTE: Testing on Windows is partial at this stage
 
 == How Do I install blinky?
 
@@ -65,7 +65,7 @@ Install lib-usb-1.0 and the lib-usb-compat-0.1 layer with your favourite package
     
 For example, on OSX
     
-  brew install libusb-compat
+  brew install libusb
     
 ==== Windows
          
